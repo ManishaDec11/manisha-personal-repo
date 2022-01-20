@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="dataweave-exampleFlow" doc:id="8b72165e-84d6-48d9-8f15-d06dfc4b4d79" >
+		<http:listener doc:name="get/timezone" doc:id="a4055a1a-7673-43ef-a55e-2f1705297077" config-ref="HTTP_Listener_config" path="/timezone"/>
+		<ee:transform doc:name="Transform Message" doc:id="c24d5db7-dfd6-49ac-b96a-db8920dc200d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"id":1,
+	/*customer fname	  
+	 */
+	"fname":"fname",
+	//customer last name
+	"lname":"lname",
+	"time": now(),
+	"timewithzone": (now() >> 'UTC') as DateTime {format: "dd-MMM-yy hh.mm.ss.SSSSSSSSS a VV"} as String {format: "yyyy-MM-dd'T'HH:mm:ss:SSS Z"}
+	
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="63d341c1-985e-43de-b2e6-e0536c4e721d" message="#[payload]"/>
+	</flow>
+	<flow name="dataweave-exampleFlow2" doc:id="5851c3a0-12f7-4408-be5f-90b2da271df7" >
+		<http:listener doc:name="get/dwfilter" doc:id="0d526a10-3466-4b94-a9a7-0d1c45b1f71c" config-ref="HTTP_Listener_config" path="/dwfilter"/>
+		<ee:transform doc:name="Transform Message" doc:id="a2214e26-746c-4039-8612-fadfc032282c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var requestBody= 
+[{
+    "firstName": "James",
+    "lastName": "Peter",
+    "age":30,
+    "salary":30000
+},
+{
+    "firstName": "Peter",
+    "lastName": "Gonsalves",
+    "age":28,
+    "salary":60000
+},
+{
+    "firstName": "Anthony",
+    "lastName": "Watson",
+    "age":27,
+    "salary":50000
+}]
+---
+requestBody filter($.salary > 40000) map (item, index) -> (
+	//"name": item.firstName ++ ' ' ++ item.lastName,
+	
+	//salary is greater than $40,000 and only age and salary
+	//item mapObject(
+		//(upper($$)): $
+	//)
+	
+	//salary is greater than $40,000 and only age and salary
+	 item filterObject $$$ > 1
+	
+)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="9ba5eed0-dd79-462e-9ee1-8b17aeb86b2f" message="#[payload]"/>
+	</flow>
+</mule>

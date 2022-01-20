@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="parallel-for-each-exampleFlow" doc:id="01251d8c-158c-42d2-b4cd-208951d98646" >
+		<http:listener doc:name="Listener-get/parallelForEach" doc:id="01c084f1-5a3e-4087-a095-76da7c0c7617" config-ref="HTTP_Listener_config" path="/parallelForEach"/>
+		<set-variable variableName="var1" value="var1" doc:name="var1"/>
+  <set-variable variableName="var2" value="var2" doc:name="var2"/>
+  <parallel-foreach collection="#[['apple', 'banana', 'orange']]">
+      <choice>
+          <when expression="#[payload == 'apple']">
+              <set-variable variableName="var2" value="newValue" doc:name="var2"/>
+              <set-variable variableName="var3" value="appleVal" doc:name="var3"/>
+          </when>
+          <when expression="#[payload == 'banana']">
+              <set-variable variableName="var3" value="bananaVal" doc:name="var3"/>
+          </when>
+          <otherwise>
+              <set-variable variableName="var3" value="otherVal" doc:name="var3"/>
+              <set-variable variableName="var4" value="val4" doc:name="var4"/>
+          </otherwise>
+      </choice>
+  </parallel-foreach>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="58099b3f-eb9b-4ea1-b075-2bcf08f12edc" />
+	</flow>
+</mule>

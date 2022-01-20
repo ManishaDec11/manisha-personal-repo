@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	
+	<flow name="objectstore-store-exampleFlow" doc:id="7dc19851-85b6-46e8-bb94-f461698befac" >
+		
+		<http:listener doc:name="/store GET" doc:id="ecd9e2c5-93d2-413f-8ab6-04b58e700e93" config-ref="HTTP_Listener_config" path="/store"/>
+		<logger level="INFO" doc:name="START" doc:id="8a2874aa-c280-4598-9e27-7c3c6996ba24" message="#['objectstore store started']"/>
+		<set-variable value="#[payload.key]" doc:name="Set key" doc:id="a052bd10-02d0-4b59-b589-948b607b4fa5" variableName="key"/>
+		<set-variable value="#[payload.value]" doc:name="Set value" doc:id="c2ee2218-f1d0-446c-88b6-f622c3a12840" variableName="value"/>
+		<os:store doc:name="Store" doc:id="eb8f1415-0c94-4b75-969d-d573b0dbd4ab" key="#[vars.key]" objectStore="Object_store">
+			<os:value ><![CDATA[#[vars.value]]]></os:value>
+		</os:store>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="376e6d89-adf2-4698-a072-7ab29d89ae45" />
+		<logger level="INFO" doc:name="END" doc:id="cecfb16c-f5d6-44b5-a525-d21d6b017469" message="#['objectstore store ended']"/>
+	</flow>
+</mule>

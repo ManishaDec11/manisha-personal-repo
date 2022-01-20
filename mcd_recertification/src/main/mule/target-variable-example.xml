@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="parentFlow" doc:id="0ff67b57-e341-4913-9d87-838cb2b83748" >
+		<http:listener doc:name="Listener - get/targetvariable" doc:id="7732770c-30fa-4b62-a223-200c106dd30a" config-ref="HTTP_Listener_config" path="/targetvariable"/>
+		<set-payload value='#[output application/json&#10;---&#10;{&#10;	"name": "test",&#10;	"description": "test description"&#10;	&#10;}]' doc:name="JSON payload" doc:id="0bb71546-3aa9-4cd4-bac0-03d0ed70ba60" />
+		<ee:transform doc:name="typeOf(payload)" doc:id="5f074343-a616-475b-9bb9-b90dbde27f2a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+typeOf(payload)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="9dfc8f26-393d-432c-82a7-b38458efd5b8" message="#['typeOf(payload):' ++ payload]"/>
+		<flow-ref doc:name="childFlow" doc:id="2d891d55-5a31-4df8-9afb-9a410bc83b31" name="childFlow" target="payload"/>
+		<logger level="INFO" doc:name="Log payload" doc:id="61ae5902-b9f3-4c62-a2d4-fa7eea271ae8" message="payload is: #[payload]"/>
+	</flow>
+	<flow name="childFlow" doc:id="724cba59-38a8-40ed-9638-2ec08cce4616" >
+		<ee:transform doc:name="XML Output" doc:id="9df59c05-230b-49ee-8e24-020063b3d50a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+Root:{
+    one:1,
+    two:'Two'
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

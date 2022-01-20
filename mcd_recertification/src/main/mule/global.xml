@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<configuration doc:name="Configuration"
+		defaultErrorHandler-ref="globalErrorHandler" />
+	<configuration-properties doc:name="Configuration properties" doc:id="a00335d9-7306-4a8d-bdfc-28f6dcf115ca" file="${mule.env}-properties.yaml" />
+	<global-property doc:name="Global Property" doc:id="6e17e383-9dfe-4f39-b5ea-d19850794e17" name="mule.env" value="dev" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e77366a0-7091-463e-9c75-76315baa4d36" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="120d5e57-c26b-4bf0-b672-2c19a8367eaf" />
+	<error-handler name="globalErrorHandler">
+		<on-error-continue enableNotifications="true"
+			logException="true" doc:name="On Error Continue">
+			<set-payload value="#['Global error handler']"
+				doc:name="Global error handle" />
+		</on-error-continue>
+	</error-handler>
+</mule>

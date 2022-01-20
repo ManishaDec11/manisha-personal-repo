@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xml-module="http://www.mulesoft.org/schema/mule/xml-module" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+
+    xmlns:http="http://www.mulesoft.org/schema/mule/http"
+
+    xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+
+http://www.mulesoft.org/schema/mule/xml-module http://www.mulesoft.org/schema/mule/xml-module/current/mule-xml-module.xsd">
+    <xml-module:config name="XML_Config" doc:name="XML Config" doc:id="f57b47aa-e949-4906-98bf-1252d2f2c60a" />
+	<flow name="schemaFlow" doc:id="bf421d8d-6be5-4e84-ab47-e648b868f97a" >
+		<http:listener doc:name="Listener" doc:id="afe686eb-519b-40f6-9fe3-e36924c705e6" config-ref="HTTP_Listener_config" path="/schema"></http:listener>
+		<try doc:name="Try" doc:id="7cb5813f-2ab5-4286-8c08-7d0080b8839d" >
+			<xml-module:validate-schema doc:name="Validate schema" doc:id="b19a2349-4e70-486d-89a9-9152c9e23323" config-ref="XML_Config" schemas="schema\file.xsd" />
+			<error-handler >
+				<on-error-propagate enableNotifications="false" logException="false" doc:name="On Error Propagate" doc:id="bcdcdc4d-7b68-4b4d-96f5-dc03f21f4a6a" type="XML-MODULE:SCHEMA_NOT_HONOURED">
+					<foreach doc:name="For Each" doc:id="8d2ecc14-9473-4fb1-b5e7-21f8590770b8" collection="#[error.muleMessage.typedValue]">
+						<logger level="INFO" doc:name="Logger" doc:id="777dc16a-315d-437e-a232-5e9245597f29" message="#['At line: $(payload.lineNumber), column: $(payload.columnNumber) → $(payload.description)']"/>
+					</foreach>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<logger level="INFO" doc:name="Logger" doc:id="6467623d-33b4-462c-b6df-e6cb474b4bc6" message="#[payload]"></logger>
+	</flow>
+</mule>

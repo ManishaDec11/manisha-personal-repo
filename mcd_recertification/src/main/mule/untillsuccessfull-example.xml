@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="04e1f73e-d455-4ea8-9d79-ce535a6b3953" responseTimeout="60000">
+		<http:request-connection host="127.0.0.1" port="8085" />
+	</http:request-config>
+	<flow name="untillsuccessfull-exampleFlow" doc:id="fabd8b5a-7692-45f2-8c2c-d229ba744cc5">
+		<http:listener doc:name="GET:/untillsuccessfull" doc:id="0a44c484-d056-473c-8144-4402e738c418" config-ref="HTTP_Listener_config" path="/untillsuccessfull"/>
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="29ca3396-125b-4af2-926f-61ffc1a40c2e" >
+			<http:request method="GET" doc:name="Request" doc:id="e4afac24-b31e-41a1-b40d-33e627959d69" path="/posts" config-ref="HTTP_Request_configuration"/>
+		</until-successful>
+	</flow>
+</mule>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<jms:config name="JMS_Config" doc:name="JMS Config" doc:id="ef8bb898-aa17-4a58-a1ca-de58819652a7" >
+		<jms:active-mq-connection username="admin" password="admin">
+			<jms:factory-configuration brokerUrl="tcp://localhost:61616" />
+		</jms:active-mq-connection>
+	</jms:config>
+	<flow name="jms-example-producerFlow" doc:id="932e0fa4-227e-4a78-919a-0b2ed19b0426" initialState="stopped">
+		<scheduler doc:name="Scheduler" doc:id="f8123998-23d7-40dd-afdd-a787c311d2c6" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="1" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
+		<ee:transform doc:name="Transform Message" doc:id="9e49ba05-4965-482e-8fdc-6d63ddf9017b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"empId": 101,
+	"empFname": "empFname",
+	"empLname": "empLname"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<jms:publish doc:name="Publish" doc:id="af68043e-a00d-4338-b291-27e39d806958" config-ref="JMS_Config" destination="queue.samplequeue" sendCorrelationId="ALWAYS"/>
+		<logger level="INFO" doc:name="Logger" doc:id="4c99b021-d2a0-47ec-98d8-8a733f56a184" message="#['message dropped to queue successfully']"/>
+	</flow>
+	<flow name="jms-example-consumerFlow" doc:id="2713a0d8-d749-458b-9fcb-6e32e531f55c" initialState="stopped">
+		<jms:listener doc:name="On New Message" doc:id="a201b36f-5d02-44e3-8ec7-9f65fee5bb3b" config-ref="JMS_Config" destination="queue.samplequeue" ackMode="MANUAL">
+			<jms:consumer-type >
+				<jms:queue-consumer />
+			</jms:consumer-type>
+		</jms:listener>
+		<set-payload value="#[output application/json ---payload]" doc:name="Set Payload" doc:id="7ad691fe-9e07-415a-b52d-b23c5c3a7dab"/>
+		<logger level="INFO" doc:name="Logger" doc:id="2a5f70f5-cbd6-4bb1-95ad-6f6c7b0d5558" message="#[payload]"/>
+	</flow>
+</mule>

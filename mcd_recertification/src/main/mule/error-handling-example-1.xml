@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	<validation:config name="Validation_Config1"
+		doc:name="Validation Config"
+		doc:id="cd13f535-2a49-477f-9ceb-d373f7992d3b" />
+
+	<flow name="mainFlow" doc:id="647bcbab-0ba1-490d-8249-a81465b8b5c3" >
+		<http:listener doc:name="Listener - get /error1" doc:id="9a23af9b-8b40-4c6f-9fbc-4ac416ccc9d6" config-ref="HTTP_Listener_config" path="/error1"/>
+		<!-- <set-payload value="#['Success - begin main flow']" doc:name="Success - begin main flow" doc:id="6f483297-8b20-40a9-ba6b-676d7cf5472b" />
+		<validation:is-number numberType="INTEGER" doc:name="Is number" doc:id="e811e6cd-6007-4c12-94b8-4f40854a0a45" config-ref="Validation_Config1" value="#[payload]" message="#['validate - payload is an integer']"/> -->
+		<flow-ref doc:name="privateFlow" doc:id="aaa88cec-e363-44cf-99d0-4360e65ca00f" name="privateFlow"/>
+		<set-payload value="#['Success - end main flow']" doc:name="Success - end main flow" doc:id="29640f61-aa76-4e3c-a762-c122a14450a1" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="0c573272-60f7-4b8a-8d66-1bd237c272ac" >
+				<set-payload value="#['Error - main flow']" doc:name="Error - main flow" doc:id="b83bac4a-ddc3-4c7d-975c-c5915eb5b471" />
+			</on-error-continue>
+			<!-- <on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="365e9dbe-9f4d-4990-8cfd-4d84dc750003" >
+				<set-payload value="#['Error - main flow']" doc:name="Error - main flow" doc:id="f18a42fb-3eaa-4cfe-8e7b-b4eff7049834" />
+			</on-error-propagate> -->
+		</error-handler>
+	</flow>
+	<flow name="privateFlow" doc:id="1720dea3-6b64-4c28-b054-b62f0759fb76" >
+		<set-payload value="#['Success - private flow']" doc:name="Success - private flow" doc:id="0f9bf4aa-abfe-480f-9487-d8b26b53338c" />
+		<validation:is-number numberType="INTEGER" doc:name="Is number" doc:id="b288f0bd-07c2-4790-affe-d3d3dd29d13d" config-ref="Validation_Config1" value="#[payload]" message="#['validate - payload is an integer']"/>
+	<error-handler >
+			<!-- <on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="352498b7-2f1e-49fe-9013-f9fe5469ef98" >
+				<set-payload value="#['Error - main flow']" doc:name="Error - main flow" doc:id="e4f72d2f-4332-4553-85ad-c369a8f3d4b4" />
+			</on-error-continue> -->
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ff20003f-29a1-4732-9fb1-89359d708031" >
+				<set-payload value="#['Error - private flow']" doc:name="Error - private flow" doc:id="b2feffe6-c1cb-4cfa-8caf-cde4157c5bd5" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="error2Flow" doc:id="229732f1-bb26-45a8-9a2f-ac71b8f9fd43" >
+		<http:listener doc:name="Listener - get/error2" doc:id="1643661a-236f-4e6a-b696-2907888a0a2f" config-ref="HTTP_Listener_config" path="/error2"/>
+		<set-payload value="#['MAIN']" doc:name="MAIN" doc:id="62e15e24-d924-4430-a2a0-01ae32777a8f" />
+		<ee:transform doc:name="Transform Message" doc:id="034e4bf3-ef7b-4087-9424-2f97e92cc6ae" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+
+	"RESPONSE" ++ payload
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="97f06e01-f122-4c73-b0d4-d30769776dec" type="HTTP:NOT_FOUND">
+				<set-payload value="#['http:not_found error']" doc:name="http:not_found error" doc:id="78415007-4c0f-4894-aa7b-7c23558b375a" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

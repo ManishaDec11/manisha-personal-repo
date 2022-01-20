@@ -1,0 +1,60 @@
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+
+    xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="roundRobinRouteExampleFlow" doc:id="3b09e52e-c0f5-4d0e-8ea8-8c43e206d959" initialState="stopped">
+		<scheduler doc:name="Scheduler" doc:id="3f43d105-5408-4af2-8642-556c27c22ffc" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<round-robin doc:name="Round Robin" doc:id="2906916d-7f0b-46c2-9052-791416da8400" >
+			<route >
+				<set-payload value="#['payload_3']" doc:name="payload_3" doc:id="1d62fcaa-9b7e-446d-a737-60d87d670bf3" />
+			</route>
+			<route >
+				<set-payload value="#['payload_1']" doc:name="payload_1" doc:id="542b7d42-5bac-4acf-97b1-7efc46038638" />
+			</route>
+			<route >
+				<set-payload value="#['payload_2']" doc:name="payload_2" doc:id="42109c57-86bc-488c-b515-e0172011aafb" />
+			</route>
+		</round-robin>
+		<logger level="INFO" doc:name="Logger" doc:id="b2495ea2-ed70-4985-ae8d-467fac821d9a" message="#[payload]" />
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="24a700ba-b1cb-47dd-aad6-3b702f02e229" />
+	</flow>
+
+    <!-- <flow name="round-robinFlow" doc:id="0b5de8f3-5ce3-4392-9c2c-9c10051cc074" >
+
+        <scheduler doc:name="Scheduler" doc:id="d9de6106-8eb6-4835-9861-31a8d1eb5849" >
+
+            <scheduling-strategy >
+
+                <cron expression="* * * * * ?" timeZone="Asia/Kolkata" ></cron>
+
+            
+
+</scheduling-strategy>
+
+        </scheduler>
+
+        <round-robin doc:name="Round Robin" doc:id="11ec071a-f9c1-4931-b3eb-bfa91ed19389" >
+
+            <route>
+
+                <logger level="INFO" doc:name="Logger" doc:id="1781d0be-ee24-4f44-86bf-ad3780344dda" message="Route1"></logger>
+
+            </route>
+
+            <route>
+
+                <logger level="INFO" doc:name="Logger" doc:id="0e7774c7-7df0-4206-bb91-7935e551bf96" message="Route2"></logger>
+
+            </route>
+
+        </round-robin>
+
+    </flow>
+ -->
+</mule>

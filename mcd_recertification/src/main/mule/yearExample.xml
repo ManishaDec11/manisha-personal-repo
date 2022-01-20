@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+<flow name="yearExampleFlow" doc:id="a01fe745-bf6a-4059-80f4-e344a2b40954" >
+		<http:listener doc:id="92087d8f-a65b-4efc-ad36-78bf967a8cc5" doc:name="HTTP: GET /yearExample" config-ref="HTTP_Listener_config" path="/yearExample"/>
+		<set-payload value="#[{'year': '2021'}]" doc:name="{'year': '2021'}" doc:id="b0c8caae-cfb5-4c39-8d77-ea379d8ca897" />
+		<logger level="INFO" doc:name="Logger" doc:id="a931ab23-9941-42f9-b2bc-64a0ecef249c" message="'The Year is #[ payload.year]'"/>
+		
+	
+</flow>
+</mule>

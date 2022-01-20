@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="validatePayloadFlow" doc:id="52aaed9e-731f-462f-98ec-936535cf7dbe" >
+		<http:listener doc:name="Listener" doc:id="b86e53e9-61a0-424e-96f8-30a16ac5e898" config-ref="HTTP_Listener_config" path="/validatePayload"/>
+		<set-payload value="START" doc:name='"START"' doc:id="e3f472c1-ceaa-42a3-99f7-c02959ff1ffd" />
+		<validation:is-blank-string doc:name="Is blank string" doc:id="f7947ad6-e5f5-4154-9f8f-953cb6c32188" config-ref="Validation_Config" value="#[payload]" message="#['String is not blank']"/>
+		<set-payload value="END" doc:name='"END"' doc:id="7dd7cbf8-12ed-4b2e-b452-ed98e3235832" />
+	</flow>
+</mule>

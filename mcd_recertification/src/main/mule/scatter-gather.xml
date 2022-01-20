@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="scatter-gathger-demoFlow">
+		<http:listener doc:name="Listener" doc:id="875aaf64-34e2-448a-bd12-5a1dc0963a41" config-ref="HTTP_Listener_config" path="/scatter-gather"/>
+		<set-payload value='#[{"message": "hello"}]' doc:name="message - hello" doc:id="bb295564-82b8-4bbb-8e98-c34d8b575a8e" />
+		<set-variable variableName="var1" value="var1" doc:name="var1"/>
+		<!-- <set-variable variableName="var2" value="var2" doc:name="var2"/> -->
+		<scatter-gather doc:name="Scatter-Gather"
+			doc:id="49c97310-b81e-44a2-90bb-9d67b636a14f">
+			<route>
+				<set-variable variableName="var3" value="appleVal" doc:name="var3 - appleVal"/>
+				<!-- <flow-ref doc:name="scatter-gatherSub_Flow" doc:id="4333b9b1-5d1f-4099-875b-146db7a31d3e" name="scatter-gatherSub_Flow"/> -->
+				<!-- <ee:transform doc:name="Transform Message" doc:id="9db4985d-f152-47c9-b884-c5ecb19c8d08" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="var2" ><![CDATA[%dw 2.0
+output application/json
+-&#45;&#45;
+{
+	"name" : "test"
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform> -->
+				<http:request method="POST" doc:name="POST:/childFlow" doc:id="b640e108-029a-4c0a-952e-86627ee17d74" config-ref="HTTP_Request_configuration" path="/childFlow" outputMimeType="application/json"/>
+			
+</route>
+			<route>
+				<set-variable variableName="var3" value="bananaVal" doc:name="var3 - bananaVal"/>
+			</route>
+			<route>
+				<set-variable variableName="var3" value="otherVal" doc:name="var3 - otherVal"/>
+				<set-variable variableName="var4" value="val4" doc:name="var4 - val4"/>
+			</route>
+		</scatter-gather>
+		<logger level="INFO" doc:name="Logger" doc:id="0f156814-e3f7-42db-8be0-ab22e4587e13" />
+	
+</flow>
+	<sub-flow name="scatter-gatherSub_Flow" doc:id="ad43642a-cd59-4164-b701-88a005ac1d97" >
+		<set-variable variableName="var2" value="newValue" doc:name="var2 - newValue" />
+	</sub-flow>
+	<flow name="scatter-gatherFlow1" doc:id="dbba8ef0-2aa4-452f-9f2d-a4def09cade5" >
+		<http:listener doc:name="childFlow" doc:id="470acfd9-60c8-4385-92be-94dd2b827c58" config-ref="HTTP_Listener_config" path="/childFlow" allowedMethods="POST"/>
+		<set-variable value="newValue" doc:name="var2 - newValue" doc:id="3052d309-ebb4-47ea-95c2-3f0f417d6771" variableName="var2 "/>
+		<set-payload value='#[{"message": "hi"}]' doc:name="Set Payload" doc:id="776836cc-700e-490e-bb0f-2aba5663d26f" />
+	</flow>
+
+</mule>

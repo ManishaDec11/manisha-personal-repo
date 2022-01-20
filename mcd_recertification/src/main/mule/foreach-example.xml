@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="foreach-example-batchsize1Flow" doc:id="23b0efdd-6b1d-47ba-8a5e-17be8072679d" >
+		<http:listener doc:name="GET:/foreach" doc:id="e685d1d3-8e86-4ab8-9f1c-85e16a202272" config-ref="HTTP_Listener_config" path="/foreach"/>
+		<ee:transform doc:name="Transform Message" doc:id="7c95b0f7-32d5-4995-83f7-2d3f3635bf45" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    "foos" : [
+       "foo1": {
+            "prop1":"value1",
+            "prop2":"value2"
+        },
+       "foo2": {
+            "prop1":"value3", 
+            "prop2":"value4"
+        },
+        "foo3": {
+            "prop1":"value5", 
+            "prop2":"value6"
+        },
+        "foo4": {
+            "prop1":"value7", 
+            "prop2":"value8"
+        }
+        
+    ]
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="602bcfee-6ee4-462c-bcb1-e5c94cf7553a" collection="#[payload.foos]" batchSize="2">
+			<set-payload value="#[output application/json --- payload]" doc:name="Set Payload" doc:id="16f96b9e-4c6b-47c0-b343-bce1a4098a7b" />
+			<logger level="INFO" doc:name="Logger" doc:id="a328a8b0-790d-4433-8fc2-f70f2e4be3c7" message="inside for each: #[payload]]"/>
+		</foreach>
+	</flow>
+</mule>

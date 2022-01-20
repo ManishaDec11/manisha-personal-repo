@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="batchExample-test-suite.xml" />
+	<munit:test name="batchExample-test-suite-checkCompanyTest" doc:id="455e5f06-f067-4d85-a80e-7ded5b361996" description="Test">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="adf9242b-d478-4e22-8ef5-2fe12d55d25a" >
+				<munit:payload value='{"company":"mulesoft"}' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to checkCompany" doc:id="115190e5-e9dd-4651-958c-55cbc30f0a12" name="checkCompany"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="1cf4d504-bce8-42d5-89f9-8265a3f00bc3" is="#[MunitTools::both(MunitTools:notNullValue(),MunitTools:equalTo(true))]" expression="#[payload]" message="payload is either null or it doesn't return true"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

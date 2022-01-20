@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	<!-- <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="9b8b2c2b-2018-4df1-b8df-c59f4ea16c26" >
+		<http:request-connection host="localhost" port="8083" connectionIdleTimeout="300000"/>
+	</http:request-config>
+ -->	<!-- <flow name="mcd_recertificationFlow1" doc:id="57d9016f-a722-4a28-a519-7af59eebba34" >
+		<http:listener doc:id="30f033c5-1f8a-4aeb-8c1f-f9c6a36958b2" doc:name="HTTP: GET /demo" config-ref="HTTP_Listener_config" path="/demo"/>
+		<set-payload value='#["Start"]' doc:name='"Start"' doc:id="3e4a94ff-b4f4-448f-bfb6-2f6c42a2ee0a" />
+		<set-variable value="#[0]" doc:name="count=0" doc:id="3c821efe-75c1-4768-84df-894579db4f59" variableName="count"/>
+		<set-payload value='#["Processing"]' doc:name='"Processing"' doc:id="ad504e66-b3fa-416a-b4ca-990c5bbe0c7d" />
+		<set-variable value="#[1]" doc:name="count=1" doc:id="198c32ce-54ae-4506-9157-32ad51c549ef" variableName="count"/>
+		<set-payload value='#["Complete"]' doc:name='"Complete"' doc:id="7dfa8625-d404-4afa-9fa0-883377018355" />
+	</flow>
+	<flow name="main" doc:id="5f1efdd9-2e49-48ab-87b4-1fa3a17dc217" >
+		<http:listener doc:name="HTTP : GET /pianos" doc:id="f52c55e2-3ee6-4b76-b5aa-d47bbbdd4ae1" config-ref="HTTP_Listener_config" path="/pianos"/>
+		<set-payload value='#["Pianos"]' doc:name='"Pianos"' doc:id="ddc83c49-926a-44b6-b921-00ccaab735f6" />
+		<set-variable value='#["producer"]' doc:name="producer" doc:id="0e9c2136-9944-4255-976b-906d56031fa6" variableName="producer"/>
+		<http:request method="POST" doc:name="POST HTTP/child" doc:id="c26794c8-42ab-44e0-bb49-2da60ed3641c" config-ref="HTTP_Request_configuration" path="/child"/>
+		<logger level="INFO" doc:name="Logger" doc:id="00561755-7198-478b-ae09-1acf205e7301" message='#["main"]'/>
+	</flow>
+	<flow name="child" doc:id="6f4cf0c1-7390-4d9d-8269-3c5c57c064d5" >
+		<http:listener doc:name="HTTP : POST/child" doc:id="21c06ba6-eeb4-4e87-a2af-9c9d553b421c" config-ref="HTTP_Listener_config" path="/child"/>
+		<logger level="INFO" doc:name="Logger" doc:id="96135b7e-c145-4afb-9e5d-325dd3cf7ac7" message='#["child"]'/>
+		<set-payload value='#["inside child"]' doc:name="Set Payload" doc:id="cdb458d9-a779-441c-8435-5e4525388a92" />
+	</flow> -->
+</mule>
